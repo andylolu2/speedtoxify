@@ -1,3 +1,4 @@
+from typing import Literal
 import time
 import logging
 
@@ -15,7 +16,7 @@ text = ["You are a good person"]
     ("original", 125, 8, "cuda"),
     ("original", 1000, 1, "cuda"),
 ])
-def test_onnx_models(model_name: str, iters: int, batch_size: int, device: str):
+def test_onnx_models(model_name: str, iters: int, batch_size: int, device: Literal["cpu", "cuda"]):
     model = Detoxify(model_name, device=device)
     onnx_model = Speedtoxify(model_name, device=device)
 

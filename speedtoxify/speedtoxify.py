@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Any, Literal, List, Dict, Union, Optional
 from pathlib import Path
 
 import numpy as np
@@ -13,17 +13,33 @@ def sigmoid_np(x: np.ndarray):
 
 
 class Speedtoxify(Detoxify):
-    """Speedtoxify
-    Same as Detoxify but optimized for inference only using onnxruntime. 
-    """
+    '''Speedtoxify
+    Same as Detoxify but optimized for inference only using ONNX runtime.
+    '''
 
     def __init__(self,
                  model_type: str = "original",
                  checkpoint: Optional[Any] = None,
-                 device: str = "cpu",
+                 device: Literal["cpu", "cuda"] = "cpu",
                  force_export: bool = False,
                  cache_dir: Optional[Path] = None):
-        # sets self.model, self.tokenizer, self.class_names
+        '''
+        Creates a Detoxify model but exports the model to ONNX format and runs inference
+        using ONNX runtime.
+
+        Args:
+            model_type (str, optional): The available model types in Detoxify.
+                Defaults to "original".
+            checkpoint (Any | None, optional): Checkpoint of the model to load.
+                Defaults to None.
+            device (Literal["cpu", "cuda"], optional): The device to run on. 
+                Currently supports "cpu" or "cuda". "onnxruntime-gpu" needs to be installed 
+                for inference on cuda. Defaults to "cpu".
+            force_export (bool, optional): Whether or not to force re-export the ONNX model.
+                Defaults to False.
+            cache_dir (Path | None, optional): Directory to save the ONNX models.
+                Defaults to Path.home() / ".cache/detoxify_onnx".
+        '''
         super().__init__(model_type, checkpoint, device)
 
         if cache_dir is None:
@@ -34,14 +50,16 @@ class Speedtoxify(Detoxify):
         del self.model
 
         if device == "cuda":
-            providers = ['CUDAExecutionProvider']
+            providers = ["CUDAExecutionProvider"]
         else:
-            providers = ['CPUExecutionProvider']
+            providers = ["CPUExecutionProvider"]
         self.session = InferenceSession(str(onnx_path), providers=providers)
 
-    def predict(self, text):
-        inputs = self.tokenizer(text, return_tensors="np",
-                                truncation=True, padding=True)
+    def predict(self, text: Union[str, List[str]]) -> Dict[str, List[float]]:
+        inputs = self.tokenizer(text,
+                                return_tensors="np",
+                                truncation=True,
+                                padding=True)
         outputs = self.session.run(None, input_feed=dict(inputs))[0]
         scores = sigmoid_np(outputs)
         results = {}

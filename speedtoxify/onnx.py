@@ -1,3 +1,4 @@
+from typing import Union
 from pathlib import Path
 import logging
 import shutil
@@ -7,7 +8,13 @@ from onnxruntime.transformers.onnx_model import OnnxModel
 from transformers.onnx import FeaturesManager, export, validate_model_outputs
 
 
-def deduplicate_shared_layers(path: Path):
+def deduplicate_shared_layers(path: Union[Path, str]):
+    '''
+    Removes the duplicated shared layers when exporting the model to ONNX format.
+
+    Args:
+        path (Path): Path to the .onnx file
+    '''
     model = onnx.load(str(path))
     onnx_model = OnnxModel(model)
 
@@ -26,7 +33,7 @@ def deduplicate_shared_layers(path: Path):
     onnx_model.save_model_to_file(str(path))
 
 
-def save_onnx(model, tokenizer, output_path: Path):
+def save_onnx(model, tokenizer, output_path: Union[Path, str]):
     logger = logging.getLogger("transformers.onnx")
     level = logger.level
     logger.setLevel(logging.INFO)
@@ -35,6 +42,7 @@ def save_onnx(model, tokenizer, output_path: Path):
     model.save_pretrained(tmp_dir)
 
     try:
+        output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         model = FeaturesManager.get_model_from_feature(

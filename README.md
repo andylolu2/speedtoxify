@@ -27,8 +27,8 @@ Evaluation script can be found in [test_speed.py](tests/test_speed.py).
 ## :star2: Quick start
 
 ```python
-# Python 3.9.6
 from speedtoxify import Speedtoxify
+
 model = Speedtoxify("original-small")
 # Exporting to onnx format to /home/andylo/.cache/detoxify_onnx/original-small.onnx...
 # Using framework PyTorch: 1.11.0+cu102
@@ -38,6 +38,7 @@ model = Speedtoxify("original-small")
 # 	- Validating ONNX Model output "logits":
 # 		-[✓] (2, 6) matches (2, 6)
 # 		-[✓] all values close (atol: 1e-05)
+
 res = model.predict("I hate you!")
 print(res)
 # {'toxicity': 0.9393415, 'severe_toxicity': 0.015587699, 'obscene': 0.039672945, 'threat': 0.0733101, 'insult': 0.15676126, 'identity_attack': 0.019178415}
@@ -51,10 +52,14 @@ exported and stored at `~/.cache/detoxify_onnx`.
 This directory can be customized in the `cache_dir` argument to 
 `Speedtoxify()`.
 
+## Documentation
+
+Please refer to [docs](docs).
 
 ## GPU inference
 
-Please install `onnxruntime-gpu` for inference on gpus. 
+Please install `onnxruntime-gpu` for inference on gpus. Requires the 
+machine have CUDA installed.
 
 ```terminal
 pip install onnxruntime-gpu
