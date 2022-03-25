@@ -3,3 +3,4 @@ numpy>=1.22.3
 onnx>=1.11.0
 onnxruntime>=1.10.0
 sympy>=1.10.1
+transformers>=4.17.0
