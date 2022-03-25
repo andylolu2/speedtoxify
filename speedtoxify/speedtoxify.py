@@ -2,7 +2,7 @@ from typing import Any, Literal, List, Dict, Union, Optional
 from pathlib import Path
 
 import numpy as np
-from onnxruntime import InferenceSession
+from onnxruntime import InferenceSession, SessionOptions
 from detoxify import Detoxify
 
 from .onnx import save_onnx
@@ -22,7 +22,8 @@ class Speedtoxify(Detoxify):
                  checkpoint: Optional[Any] = None,
                  device: Literal["cpu", "cuda"] = "cpu",
                  force_export: bool = False,
-                 cache_dir: Optional[Path] = None):
+                 cache_dir: Optional[Path] = None,
+                 session_options: Optional[SessionOptions] = None):
         '''
         Creates a Detoxify model but exports the model to ONNX format and runs inference
         using ONNX runtime.
@@ -39,21 +40,31 @@ class Speedtoxify(Detoxify):
                 Defaults to False.
             cache_dir (Path | None, optional): Directory to save the ONNX models.
                 Defaults to Path.home() / ".cache/detoxify_onnx".
+            session_options (SessionOptions | None, optional): ONNX runtime SessionOptions for 
+                configuring the ONNX session. Please refer to ONNX python API docs.
         '''
         super().__init__(model_type, checkpoint, device)
 
         if cache_dir is None:
             cache_dir = Path.home() / ".cache/detoxify_onnx"
+
         onnx_path = cache_dir / f"{model_type}.onnx"
+
+        # export onnx model
         if not onnx_path.exists() or force_export:
             save_onnx(self.model, self.tokenizer, onnx_path)
+        # delete huggingface model to save memory
         del self.model
 
         if device == "cuda":
             providers = ["CUDAExecutionProvider"]
-        else:
+        elif device == "cpu":
             providers = ["CPUExecutionProvider"]
-        self.session = InferenceSession(str(onnx_path), providers=providers)
+
+        # start onnx runtime session
+        self.session = InferenceSession(str(onnx_path),
+                                        providers=providers,
+                                        sess_options=session_options)
 
     def predict(self, text: Union[str, List[str]]) -> Dict[str, List[float]]:
         inputs = self.tokenizer(text,
