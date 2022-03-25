@@ -24,6 +24,21 @@ that speeds up inference by 2-4x by using [ONNX runtime](https://github.com/micr
 
 Evaluation script can be found in [test_speed.py](tests/test_speed.py).
 
+> Evaluation is done on my laptop with AMD 4900HS and Nvidia 2060 Max-Q.
+
+## :gear: Installation
+
+```terminal
+pip install speedtoxify
+```
+
+Please additionally install `onnxruntime-gpu` for inference on gpus. 
+Requires the machine have CUDA installed.
+
+```terminal
+pip install onnxruntime-gpu
+```
+
 ## :star2: Quick start
 
 ```python
@@ -52,15 +67,6 @@ exported and stored at `~/.cache/detoxify_onnx`.
 This directory can be customized in the `cache_dir` argument to 
 `Speedtoxify()`.
 
-## Documentation
+## :page_with_curl: Documentation
 
 Please refer to [docs](docs).
-
-## GPU inference
-
-Please install `onnxruntime-gpu` for inference on gpus. Requires the 
-machine have CUDA installed.
-
-```terminal
-pip install onnxruntime-gpu
-```

@@ -8,9 +8,10 @@ with open("requirements.txt", "r") as fh:
 
 setuptools.setup(
     name="speedtoxify",
-    version="0.0.1",
+    version="0.0.2",
     author="Andy Lo",
     author_email="andylolu24@gmail.com",
+    url="https://github.com/andylolu2/speedtoxify",
     description="Wrapper around detoxify package for faster inference using ONNX runtime.",
     long_description=long_description,
     long_description_content_type="text/markdown",
