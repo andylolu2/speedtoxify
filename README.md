@@ -4,10 +4,22 @@
 
 ## Fast :speak_no_evil: Detoxify inference with ONNX runtime
 
+#### [:zap: Benchmarks](#zap-lightning-fast) | [:gear: install](#gear-installation) | [:star2: Quick Start](#star2-quick-start) | [:page_with_curl: Docs](#pagewithcurl-documentation)
+
 </div>
 
 Speedtoxify is a wrapper around [`detoxify`](https://github.com/unitaryai/detoxify) 
 that speeds up inference by 2-4x by using [ONNX runtime](https://github.com/microsoft/onnxruntime). 
+
+Detoxify is a NLP library for detecting toxic / inappropriate / profane texts. 
+Speedtoxify makes use of their pretrained models and runs them in 
+ONNX runtime for much faster inference speeds, which makes it the better option 
+for being used in production. 
+
+Speedtoxify provides the same Python API as Detoxify, so it can be used as a drop-in replacement. 
+
+However, if your focus is on fine-tuning / re-training the models with your own 
+data, please refer to Detoxify.
 
 ## :zap: Lightning fast
 
@@ -44,6 +56,8 @@ pip install onnxruntime-gpu
 ```
 
 ## :star2: Quick start
+
+Speedtoxify provides the identical Python API as Detoxify. 
 
 ```python
 from speedtoxify import Speedtoxify
