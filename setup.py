@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as fh:
 
 setuptools.setup(
     name="speedtoxify",
-    version="0.0.2",
+    version="0.0.3",
     author="Andy Lo",
     author_email="andylolu24@gmail.com",
     url="https://github.com/andylolu2/speedtoxify",
