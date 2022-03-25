@@ -28,12 +28,16 @@ Evaluation script can be found in [test_speed.py](tests/test_speed.py).
 
 ## :gear: Installation
 
+### Pip
+
 ```terminal
 pip install speedtoxify
 ```
 
+### GPU Inference
+
 Please additionally install `onnxruntime-gpu` for inference on gpus. 
-Requires the machine have CUDA installed.
+Requires the machine to have CUDA installed.
 
 ```terminal
 pip install onnxruntime-gpu
@@ -45,9 +49,9 @@ pip install onnxruntime-gpu
 from speedtoxify import Speedtoxify
 
 model = Speedtoxify("original-small")
-# Exporting to onnx format to /home/andylo/.cache/detoxify_onnx/original-small.onnx...
+# Exporting to onnx format to ~/.cache/detoxify_onnx/original-small.onnx...
 # Using framework PyTorch: 1.11.0+cu102
-# Removing shared weights from /home/andylo/.cache/detoxify_onnx/original-small.onnx...
+# Removing shared weights from ~/.cache/detoxify_onnx/original-small.onnx...
 # Validating ONNX model...
 # 	-[✓] ONNX model output names match reference model ({'logits'})
 # 	- Validating ONNX Model output "logits":
