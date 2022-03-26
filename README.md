@@ -88,3 +88,18 @@ This directory can be customized in the `cache_dir` argument to
 ## :page_with_curl: Documentation
 
 Please refer to [docs](docs).
+
+## :face_exhaling: Limitations
+
+### Memory Usage
+
+The memory usage is much higher for `original-small` and `unbiased-small` 
+in ONNX runtime (300-400MB) than in Detoxify (Vanilla PyTorch, 30-40MB). 
+
+This is most likely due to the fact that the lightweight models are based 
+on ALBERT, which makes use of shared layers to reduce memory usage. 
+However, these shared layers seem to be duplicated (instead of shared) in 
+the ONNX model graph which leads to the much higher memory usage.
+
+Other models such as `original` (BERT), `unbiased` (RoBERTa), or 
+`multilingual` (XMLR) does not have this issue. 
