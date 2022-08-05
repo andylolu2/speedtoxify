@@ -1,22 +1,26 @@
-from typing import Literal
-import time
 import logging
+import time
+from typing import Literal
 
 import pytest
-
-from speedtoxify import Speedtoxify
 from detoxify import Detoxify
+from speedtoxify import Speedtoxify
 
 text = ["You are a good person"]
 
 
-@pytest.mark.parametrize("model_name,iters,batch_size,device", [
-    ("original", 125, 8, "cpu"),
-    ("original", 1000, 1, "cpu"),
-    ("original", 125, 8, "cuda"),
-    ("original", 1000, 1, "cuda"),
-])
-def test_onnx_models(model_name: str, iters: int, batch_size: int, device: Literal["cpu", "cuda"]):
+@pytest.mark.parametrize(
+    "model_name,iters,batch_size,device",
+    [
+        ("original", 125, 8, "cpu"),
+        ("original", 1000, 1, "cpu"),
+        ("original", 125, 8, "cuda"),
+        ("original", 1000, 1, "cuda"),
+    ],
+)
+def test_onnx_models(
+    model_name: str, iters: int, batch_size: int, device: Literal["cpu", "cuda"]
+):
     model = Detoxify(model_name, device=device)
     onnx_model = Speedtoxify(model_name, device=device)
 

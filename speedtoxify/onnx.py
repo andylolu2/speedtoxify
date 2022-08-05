@@ -1,20 +1,21 @@
-from typing import Union
-from pathlib import Path
 import logging
 import shutil
+from pathlib import Path
+from typing import Union
 
-import onnx
 from onnxruntime.transformers.onnx_model import OnnxModel
 from transformers.onnx import FeaturesManager, export, validate_model_outputs
 
+import onnx
+
 
 def deduplicate_shared_layers(path: Union[Path, str]):
-    '''
+    """
     Removes the duplicated shared layers when exporting the model to ONNX format.
 
     Args:
         path (Path): Path to the .onnx file
-    '''
+    """
     model = onnx.load(str(path))
     onnx_model = OnnxModel(model)
 
@@ -26,7 +27,8 @@ def deduplicate_shared_layers(path: Union[Path, str]):
         for j in range(i + 1, len(initializer)):
             if initializer[j].raw_data == initializer[i].raw_data:
                 onnx_model.replace_input_of_all_nodes(
-                    initializer[j].name, initializer[i].name)
+                    initializer[j].name, initializer[i].name
+                )
                 duplicated_layers.add(j)
 
     onnx_model.update_graph()
@@ -46,9 +48,11 @@ def save_onnx(model, tokenizer, output_path: Union[Path, str]):
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         model = FeaturesManager.get_model_from_feature(
-            "sequence-classification", str(tmp_dir))
+            "sequence-classification", str(tmp_dir)
+        )
         _, model_onnx_config = FeaturesManager.check_supported_model_or_raise(
-            model, feature="sequence-classification")
+            model, feature="sequence-classification"
+        )
         onnx_config = model_onnx_config(model.config)
 
         opset = onnx_config.default_onnx_opset
@@ -69,8 +73,9 @@ def save_onnx(model, tokenizer, output_path: Union[Path, str]):
 
         # validate the models are the same
         atol = onnx_config.atol_for_validation
-        validate_model_outputs(onnx_config, tokenizer,
-                               model, output_path, onnx_outputs, atol)
+        validate_model_outputs(
+            onnx_config, tokenizer, model, output_path, onnx_outputs, atol
+        )
     finally:
         shutil.rmtree(str(tmp_dir))
         logger.setLevel(level)
